@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import StartWindow from './components/StartWindow';
+import GameWindow from './components/GameWindow';
 
-function App() {
+const GameArea = styled.div`
+  background-color: lightgreen;
+  width: 400px;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+// 爆弾の数
+const bombNum = 12;
+
+const App: React.FC = () => {
+  const [ingame, setIngame] = useState<boolean>(false);
+  const [board, setBoard] = useState<number[]>([]);
+  const handleStart = () => {
+    setIngame(true);
+    const index = Math.floor(Math.random()*12);
+    const genBoard = [...Array(bombNum)].map(() => 0);
+    genBoard[index] = 1;
+    setBoard(genBoard);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GameArea>
+      {!ingame && <StartWindow ingame={ingame} onClick={handleStart} />}
+      {ingame && <GameWindow board={board} />}
+    </GameArea>
   );
 }
+
 
 export default App;
